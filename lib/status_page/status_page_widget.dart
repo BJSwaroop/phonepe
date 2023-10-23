@@ -43,11 +43,14 @@ class _StatusPageWidgetState extends State<StatusPageWidget> {
         widget.transactionID!,
         '8a292621-5ce5-4444-8a71-a43fdb05ed77',
       );
+      setState(() {
+        _model.xverify = _model.sHAStatus;
+      });
       while (_model.success) {
         _model.apiResult7zn = await CheckStatusCall.call(
           merchantId: widget.merchantID,
           transactionId: widget.transactionID,
-          xVerify: _model.sHAStatus,
+          xVerify: _model.sha256Status,
         );
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
