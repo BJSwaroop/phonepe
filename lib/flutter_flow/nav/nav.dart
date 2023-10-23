@@ -47,6 +47,15 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               name: 'HomePage',
               path: 'homePage',
               builder: (context, params) => HomePageWidget(),
+            ),
+            FFRoute(
+              name: 'StatusPage',
+              path: 'statusPage',
+              builder: (context, params) => StatusPageWidget(
+                merchantID: params.getParam('merchantID', ParamType.String),
+                transactionID:
+                    params.getParam('transactionID', ParamType.String),
+              ),
             )
           ].map((r) => r.toRoute(appStateNotifier)).toList(),
         ),

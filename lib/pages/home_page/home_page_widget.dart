@@ -101,9 +101,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         _model.base64 = functions.converjsontobase64(
                             functions.createjson(
                                 'M1RKGWGYZ1PD',
-                                'UBIU23887887',
+                                'UBIU2387',
                                 100.0,
-                                'UBIU238834889898',
+                                'gyf38834889898',
                                 'phonepay://phonepay.com${GoRouter.of(context).location}',
                                 'REDIRECT',
                                 'phonepay://phonepay.com${GoRouter.of(context).location}',
@@ -157,6 +157,25 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         await launchURL(PhonepayAPICall.url(
                           (_model.apiResult1c7?.jsonBody ?? ''),
                         ).toString());
+
+                        context.goNamed(
+                          'StatusPage',
+                          queryParameters: {
+                            'merchantID': serializeParam(
+                              PhonepayAPICall.datamerchantId(
+                                (_model.apiResult1c7?.jsonBody ?? ''),
+                              ).toString(),
+                              ParamType.String,
+                            ),
+                            'transactionID': serializeParam(
+                              PhonepayAPICall.datamerchantTransactionId(
+                                (_model.apiResult1c7?.jsonBody ?? ''),
+                              ).toString(),
+                              ParamType.String,
+                            ),
+                          }.withoutNulls,
+                        );
+
                         if (_shouldSetState) setState(() {});
                         return;
                       } else {
