@@ -3,6 +3,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/custom_code/actions/index.dart' as actions;
+import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -13,14 +14,7 @@ import 'status_page_model.dart';
 export 'status_page_model.dart';
 
 class StatusPageWidget extends StatefulWidget {
-  const StatusPageWidget({
-    Key? key,
-    required this.merchantID,
-    required this.transactionID,
-  }) : super(key: key);
-
-  final String? merchantID;
-  final String? transactionID;
+  const StatusPageWidget({Key? key}) : super(key: key);
 
   @override
   _StatusPageWidgetState createState() => _StatusPageWidgetState();
@@ -38,50 +32,74 @@ class _StatusPageWidgetState extends State<StatusPageWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.sHAStatus = await actions.newSHA256(
-        widget.merchantID!,
-        widget.transactionID!,
-        '8a292621-5ce5-4444-8a71-a43fdb05ed77',
-      );
+      // base64
       setState(() {
-        _model.xverify = _model.sHAStatus;
+        _model.base64 = functions.converjsontobase64(functions.createjson(
+            'M1RKGWGYZ1PD',
+            'UBIU2387',
+            100.0,
+            'gyf38834889898',
+            'phonepay://phonepay.com${GoRouter.of(context).location}',
+            'REDIRECT',
+            'phonepay://phonepay.com${GoRouter.of(context).location}',
+            '78789'));
       });
-      while (_model.success) {
-        _model.apiResult7zn = await CheckStatusCall.call(
-          merchantId: widget.merchantID,
-          transactionId: widget.transactionID,
-          xVerify: _model.sha256Status,
-        );
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              (_model.apiResult7zn?.statusCode ?? 200).toString(),
-              style: TextStyle(
-                color: FlutterFlowTheme.of(context).primaryText,
-              ),
+      await Future.delayed(const Duration(milliseconds: 2000));
+      _model.sh256 = await actions.sha256New(
+        '8a292621-5ce5-4444-8a71-a43fdb05ed77',
+        _model.base64!,
+      );
+      await Future.delayed(const Duration(milliseconds: 3000));
+      setState(() {
+        _model.sha256New = _model.sh256;
+      });
+      await Future.delayed(const Duration(milliseconds: 1000));
+      _model.apiResult1c7 = await PhonepayAPICall.call(
+        xVerify: _model.sh256,
+        requestBase64: _model.base64,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            (_model.apiResult1c7?.succeeded ?? true).toString(),
+            style: TextStyle(
+              color: FlutterFlowTheme.of(context).primaryText,
             ),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: FlutterFlowTheme.of(context).secondary,
           ),
+          duration: Duration(milliseconds: 4000),
+          backgroundColor: FlutterFlowTheme.of(context).secondary,
+        ),
+      );
+      if ((_model.apiResult1c7?.succeeded ?? true)) {
+        await launchURL(PhonepayAPICall.url(
+          (_model.apiResult1c7?.jsonBody ?? ''),
+        ).toString().toString());
+        _model.sHAStatus = await actions.newSHA256(
+          PhonepayAPICall.datamerchantId(
+            (_model.apiResult1c7?.jsonBody ?? ''),
+          ).toString().toString(),
+          PhonepayAPICall.datamerchantTransactionId(
+            (_model.apiResult1c7?.jsonBody ?? ''),
+          ).toString().toString(),
+          '8a292621-5ce5-4444-8a71-a43fdb05ed77',
         );
-        await Future.delayed(const Duration(milliseconds: 3000));
         setState(() {
-          _model.paymentStatus = CheckStatusCall.code(
-            (_model.apiResult7zn?.jsonBody ?? ''),
-          ).toString().toString();
+          _model.xverify = _model.sHAStatus;
         });
-        await Future.delayed(const Duration(milliseconds: 4000));
-        if (_model.paymentStatus == 'PAYMENT_SUCCESS') {
-          setState(() {
-            _model.success = true;
-          });
-        } else {
+        while (_model.success) {
+          _model.apiResult7zn = await CheckStatusCall.call(
+            merchantId: PhonepayAPICall.datamerchantId(
+              (_model.apiResult1c7?.jsonBody ?? ''),
+            ).toString().toString(),
+            transactionId: PhonepayAPICall.datamerchantTransactionId(
+              (_model.apiResult1c7?.jsonBody ?? ''),
+            ).toString().toString(),
+            xVerify: _model.sha256Status,
+          );
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                CheckStatusCall.code(
-                  (_model.apiResult7zn?.jsonBody ?? ''),
-                ).toString().toString(),
+                (_model.apiResult7zn?.statusCode ?? 200).toString(),
                 style: TextStyle(
                   color: FlutterFlowTheme.of(context).primaryText,
                 ),
@@ -90,7 +108,50 @@ class _StatusPageWidgetState extends State<StatusPageWidget> {
               backgroundColor: FlutterFlowTheme.of(context).secondary,
             ),
           );
+          await Future.delayed(const Duration(milliseconds: 3000));
+          setState(() {
+            _model.paymentStatus = CheckStatusCall.code(
+              (_model.apiResult7zn?.jsonBody ?? ''),
+            ).toString().toString();
+          });
+          await Future.delayed(const Duration(milliseconds: 4000));
+          if (_model.paymentStatus == 'PAYMENT_SUCCESS') {
+            setState(() {
+              _model.success = true;
+            });
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  CheckStatusCall.code(
+                    (_model.apiResult7zn?.jsonBody ?? ''),
+                  ).toString().toString(),
+                  style: TextStyle(
+                    color: FlutterFlowTheme.of(context).primaryText,
+                  ),
+                ),
+                duration: Duration(milliseconds: 4000),
+                backgroundColor: FlutterFlowTheme.of(context).secondary,
+              ),
+            );
+          }
         }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              PhonepayAPICall.message(
+                (_model.apiResult1c7?.jsonBody ?? ''),
+              ).toString().toString(),
+              style: TextStyle(
+                color: FlutterFlowTheme.of(context).primaryText,
+              ),
+            ),
+            duration: Duration(milliseconds: 4000),
+            backgroundColor: FlutterFlowTheme.of(context).secondary,
+          ),
+        );
+        return;
       }
     });
 

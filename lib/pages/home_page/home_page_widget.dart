@@ -1,9 +1,7 @@
-import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/custom_code/actions/index.dart' as actions;
-import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -85,6 +83,14 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   style: FlutterFlowTheme.of(context).bodyMedium,
                 )),
               ),
+              Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(20.0, 20.0, 20.0, 20.0),
+                child: SelectionArea(
+                    child: Text(
+                  'phonepay://phonepay.com${GoRouter.of(context).location}',
+                  style: FlutterFlowTheme.of(context).bodyMedium,
+                )),
+              ),
               SelectionArea(
                   child: Text(
                 _model.sha256New!,
@@ -96,109 +102,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
                   child: FFButtonWidget(
                     onPressed: () async {
-                      var _shouldSetState = false;
-                      setState(() {
-                        _model.base64 = functions.converjsontobase64(
-                            functions.createjson(
-                                'M1RKGWGYZ1PD',
-                                'UBIU2387',
-                                100.0,
-                                'gyf38834889898',
-                                'phonepay://phonepay.com${GoRouter.of(context).location}',
-                                'REDIRECT',
-                                'phonepay://phonepay.com${GoRouter.of(context).location}',
-                                '78789'));
-                      });
-                      await Future.delayed(const Duration(milliseconds: 2000));
-                      _model.sh256 = await actions.sha256New(
-                        '8a292621-5ce5-4444-8a71-a43fdb05ed77',
-                        _model.base64!,
-                      );
-                      _shouldSetState = true;
-                      await Future.delayed(const Duration(milliseconds: 3000));
-                      setState(() {
-                        _model.sha256New = _model.sh256;
-                      });
-                      await Future.delayed(const Duration(milliseconds: 1000));
-                      _model.apiResult1c7 = await PhonepayAPICall.call(
-                        xVerify: _model.sh256,
-                        requestBase64: _model.base64,
-                      );
-                      _shouldSetState = true;
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            (_model.apiResult1c7?.statusCode ?? 200).toString(),
-                            style: TextStyle(
-                              color: FlutterFlowTheme.of(context).primaryText,
-                            ),
-                          ),
-                          duration: Duration(milliseconds: 4000),
-                          backgroundColor:
-                              FlutterFlowTheme.of(context).secondary,
-                        ),
-                      );
-                      if ((_model.apiResult1c7?.succeeded ?? true)) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              PhonepayAPICall.url(
-                                (_model.apiResult1c7?.jsonBody ?? ''),
-                              ).toString(),
-                              style: TextStyle(
-                                color: FlutterFlowTheme.of(context).primaryText,
-                              ),
-                            ),
-                            duration: Duration(milliseconds: 4000),
-                            backgroundColor:
-                                FlutterFlowTheme.of(context).secondary,
-                          ),
-                        );
-                        await launchURL(PhonepayAPICall.url(
-                          (_model.apiResult1c7?.jsonBody ?? ''),
-                        ).toString());
-
-                        context.goNamed(
-                          'StatusPage',
-                          queryParameters: {
-                            'merchantID': serializeParam(
-                              PhonepayAPICall.datamerchantId(
-                                (_model.apiResult1c7?.jsonBody ?? ''),
-                              ).toString(),
-                              ParamType.String,
-                            ),
-                            'transactionID': serializeParam(
-                              PhonepayAPICall.datamerchantTransactionId(
-                                (_model.apiResult1c7?.jsonBody ?? ''),
-                              ).toString(),
-                              ParamType.String,
-                            ),
-                          }.withoutNulls,
-                        );
-
-                        if (_shouldSetState) setState(() {});
-                        return;
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              PhonepayAPICall.message(
-                                (_model.apiResult1c7?.jsonBody ?? ''),
-                              ).toString(),
-                              style: TextStyle(
-                                color: FlutterFlowTheme.of(context).primaryText,
-                              ),
-                            ),
-                            duration: Duration(milliseconds: 4000),
-                            backgroundColor:
-                                FlutterFlowTheme.of(context).secondary,
-                          ),
-                        );
-                        if (_shouldSetState) setState(() {});
-                        return;
-                      }
-
-                      if (_shouldSetState) setState(() {});
+                      context.goNamed('StatusPage');
                     },
                     text: 'pay',
                     options: FFButtonOptions(
@@ -222,17 +126,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0.0, 89.0, 0.0, 0.0),
-                child: SelectionArea(
-                    child: Text(
-                  _model.newPS!,
-                  style: FlutterFlowTheme.of(context).bodyMedium.override(
-                        fontFamily: 'Readex Pro',
-                        color: _model.colour,
-                      ),
-                )),
               ),
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0.0, 60.0, 0.0, 0.0),
