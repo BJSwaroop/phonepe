@@ -8,22 +8,22 @@ export 'api_manager.dart' show ApiCallResponse;
 
 const _kPrivateApiFunctionName = 'ffPrivateApiCall';
 
-class PhonepayAPICall {
+class PayAPICall {
   static Future<ApiCallResponse> call({
     String? xVerify = '',
-    String? requestBase64 = '',
+    String? base64 = '',
   }) async {
     final ffApiRequestBody = '''
 {
-  "request": "${requestBase64}"
+  "request": "${base64}"
 }''';
     return ApiManager.instance.makeApiCall(
-      callName: 'Phonepay API',
+      callName: 'Pay API',
       apiUrl: 'https://api.phonepe.com/apis/hermes/pg/v1/pay',
       callType: ApiCallType.POST,
       headers: {
-        'X-VERIFY': '${xVerify}',
         'Content-Type': 'application/json',
+        'X-VERIFY': '${xVerify}',
       },
       params: {},
       body: ffApiRequestBody,
@@ -35,82 +35,29 @@ class PhonepayAPICall {
     );
   }
 
+  static dynamic success(dynamic response) => getJsonField(
+        response,
+        r'''$.success''',
+      );
   static dynamic url(dynamic response) => getJsonField(
         response,
         r'''$.data.instrumentResponse.redirectInfo.url''',
       );
-  static dynamic code(dynamic response) => getJsonField(
+  static dynamic merchantTransactionId(dynamic response) => getJsonField(
         response,
-        r'''$.code''',
+        r'''$.data.merchantTransactionId''',
+      );
+  static dynamic merchantId(dynamic response) => getJsonField(
+        response,
+        r'''$.data.merchantId''',
       );
   static dynamic message(dynamic response) => getJsonField(
         response,
         r'''$.message''',
       );
-  static dynamic datamerchantId(dynamic response) => getJsonField(
-        response,
-        r'''$.data.merchantId''',
-      );
-  static dynamic datamerchantTransactionId(dynamic response) => getJsonField(
-        response,
-        r'''$.data.merchantTransactionId''',
-      );
-  static dynamic success(dynamic response) => getJsonField(
-        response,
-        r'''$.success''',
-      );
-  static dynamic datainstrumentResponsetype(dynamic response) => getJsonField(
-        response,
-        r'''$.data.instrumentResponse.type''',
-      );
-}
-
-class CheckStatusCall {
-  static Future<ApiCallResponse> call({
-    String? merchantId = '',
-    String? transactionId = '',
-    String? xVerify = '',
-  }) async {
-    return ApiManager.instance.makeApiCall(
-      callName: 'Check status',
-      apiUrl:
-          'https://mercury-t2.phonepe.com/v3/transaction/${merchantId}/${transactionId}/status',
-      callType: ApiCallType.GET,
-      headers: {
-        'Content-Type\t': 'application/json',
-        'X-VERIFY': '${xVerify}',
-      },
-      params: {},
-      returnBody: true,
-      encodeBodyUtf8: false,
-      decodeUtf8: false,
-      cache: false,
-    );
-  }
-
   static dynamic code(dynamic response) => getJsonField(
         response,
         r'''$.code''',
-      );
-  static dynamic datapayResponseCode(dynamic response) => getJsonField(
-        response,
-        r'''$.data.payResponseCode''',
-      );
-  static dynamic datapaymentState(dynamic response) => getJsonField(
-        response,
-        r'''$.data.paymentState''',
-      );
-  static dynamic datapaidAmount(dynamic response) => getJsonField(
-        response,
-        r'''$.data.paidAmount''',
-      );
-  static dynamic datatransactionId(dynamic response) => getJsonField(
-        response,
-        r'''$.data.transactionId''',
-      );
-  static dynamic datamerchantId(dynamic response) => getJsonField(
-        response,
-        r'''$.data.merchantId''',
       );
 }
 

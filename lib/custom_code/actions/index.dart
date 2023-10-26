@@ -1,2 +1,2 @@
 export 'sha256_new.dart' show sha256New;
-export 'new_s_h_a256.dart' show newSHA256;
+export 'status_s_h_a.dart' show statusSHA;

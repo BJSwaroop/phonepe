@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 
-Future<String> newSHA256(
+Future<String> statusSHA(
   String merchantid,
   String transactionId,
   String saltkey,
